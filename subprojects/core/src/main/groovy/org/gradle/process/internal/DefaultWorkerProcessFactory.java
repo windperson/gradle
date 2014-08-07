@@ -64,8 +64,7 @@ public class DefaultWorkerProcessFactory implements Factory<WorkerProcessBuilder
         return new DefaultWorkerProcessBuilder();
     }
 
-    private class FakeAddress implements Address {
-        private static final long serialVersionUID = 11111111111111L;
+    private class FakeAddress implements Address, java.io.Serializable {
         @Override
         public String getDisplayName(){
             return "localhost";
