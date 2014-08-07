@@ -64,6 +64,14 @@ public class DefaultWorkerProcessFactory implements Factory<WorkerProcessBuilder
         return new DefaultWorkerProcessBuilder();
     }
 
+    private class FakeAddress implements Address {
+        private static final long serialVersionUID = 11111111111111L;
+        @Override
+        public String getDisplayName(){
+            return "0.0.0.0";
+        }
+    }
+
     private class DefaultWorkerProcessBuilder extends WorkerProcessBuilder {
         public DefaultWorkerProcessBuilder() {
             super(resolver);
@@ -77,13 +85,21 @@ public class DefaultWorkerProcessFactory implements Factory<WorkerProcessBuilder
             }
 
             final DefaultWorkerProcess workerProcess = new DefaultWorkerProcess(120, TimeUnit.SECONDS);
-            ConnectionAcceptor acceptor = server.accept(new Action<ObjectConnection>() {
-                public void execute(ObjectConnection connection) {
-                    workerProcess.onConnect(connection);
-                }
-            });
-            workerProcess.startAccepting(acceptor);
-            Address localAddress = acceptor.getAddress();
+            Address localAddress; 
+            try{
+                ConnectionAcceptor acceptor = server.accept(new Action<ObjectConnection>() {
+                    public void execute(ObjectConnection connection) {
+                        workerProcess.onConnect(connection);
+                    }
+                });
+                workerProcess.startAccepting(acceptor);
+                localAddress = acceptor.getAddress();    
+            } catch(Exception ex){
+                LOGGER.debug("ex=", ex.toString());
+                LOGGER.debug("use FakeAddress Object");
+                localAddress = new FakeAddress();    
+            }
+            
 
             // Build configuration for GradleWorkerMain
             List<URL> implementationClassPath = ClasspathUtil.getClasspath(getWorker().getClass().getClassLoader());
