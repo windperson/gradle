@@ -68,7 +68,7 @@ public class DefaultWorkerProcessFactory implements Factory<WorkerProcessBuilder
         private static final long serialVersionUID = 11111111111111L;
         @Override
         public String getDisplayName(){
-            return "0.0.0.0";
+            return "localhost";
         }
     }
 
