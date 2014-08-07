@@ -94,8 +94,8 @@ public class DefaultWorkerProcessFactory implements Factory<WorkerProcessBuilder
                 });
                 workerProcess.startAccepting(acceptor);
                 localAddress = acceptor.getAddress();    
-            } catch(Exception ex){
-                LOGGER.debug("ex=", ex.toString());
+            } catch(java.lang.Throwable error){
+                LOGGER.debug("ex=" + error);
                 LOGGER.debug("use FakeAddress Object");
                 localAddress = new FakeAddress();    
             }
